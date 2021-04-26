@@ -1,4 +1,5 @@
-install.packages(c("CATALYST",
+install.packages(c("BiocManager",
+                   "CATALYST",
                    "cowplot",
                    "flowCore",
                    "ggplot2",
