@@ -3,12 +3,14 @@ Package: Cytof_ILC008_compendium
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Rebecca",
+           family = "Payne",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: Your compendium description
-License: What license it uses
+           email = "rebecca.payne2@ncl.ac.uk",
+           comment = c(ORCID = "0000-0000-0000-0000"))
+Description: Analysis by cytof of immune reconstitution after bone marrow
+    transplant
+License: none
 Depends: 
     CATALYST,
     cowplot,
