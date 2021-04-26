@@ -1,0 +1,18 @@
+install.packages(c("CATALYST", 
+                   "cowplot",
+                   "devtools",
+                   "flowCore",
+                   "ggplot2"",
+                   "holepunch",
+                   "knitr"",
+                   "markdown",
+                   "openxlsx",
+                   "premessa",
+                   "readxl",
+                   "remotes",
+                   "renv",
+                   "rmarkdown",
+                   "scater",
+                   "scatterplot3d",
+                   "SingleCellExperiment"))
+                   
