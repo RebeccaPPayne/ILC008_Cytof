@@ -1,6 +1,6 @@
 Type: Compendium
 Package: Cytof_ILC008_compendium
-Title: What the Package Does (One Line, Title Case)
+Title: ILC008 immune reconstitution 
 Version: 0.0.1
 Authors@R: 
     person(given = "Rebecca",
@@ -8,8 +8,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "rebecca.payne2@ncl.ac.uk",
            comment = c(ORCID = "0000-0000-0000-0000"))
-Description: Analysis by cytof of immune reconstitution after bone marrow
-    transplant
+Description: Analysis of ILC008 immune reconstitution following stem cell transplant
 License: none
 Depends: 
     CATALYST,
