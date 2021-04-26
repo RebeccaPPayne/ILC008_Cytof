@@ -1,0 +1,318 @@
+---
+title: "ILC008"
+author: "Rebecca Payne"
+date: "23/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(readxl) 
+library(CATALYST)
+library(cowplot)
+library(flowCore)
+library(scater)
+library(SingleCellExperiment)
+library(openxlsx)
+```
+
+
+### Create SCE and use FLOWSom to identify monocytes
+Load ILC008 FCS files (CD45+), metadata, panel and create flowset
+
+```{r}
+md <- "metadata_matched_v3.xlsx" 
+md <- read_excel(md)       
+head(data.frame(md)) 
+```
+
+
+```{r}
+fs <- read.flowSet(md$file_name, transformation = F, truncate_max_range = F)
+```
+
+```{r}
+panel <- "Panel_matched_v3.xlsx" 
+panel <- read_excel(panel)                                         
+head(data.frame(panel)) 
+```
+
+
+```{r}
+all(panel$fcs_colname %in% colnames(fs))
+```
+
+```{r}
+setdiff(fs@frames$ilc008_BMT011_200619_15_normalized_CD45.fcs@parameters@data$desc,panel$antigen)
+```
+
+
+```{r}
+md$condition <- factor(md$condition, levels = c("none"))      
+md$date <- factor(md$timepoint, levels = c("none"))
+md$patient_id <- factor(md$patient_id, levels = c("ILC008", "HC002"))
+
+md$sample_id <- factor(md$sample_id, levels = md$sample_id[order(md$sample_id)])  
+```
+
+```{r}
+sce <- prepData(fs, panel, md, features = panel$fcs_colname, md_cols = list(file = "file_name", id = "sample_id", 
+                                                                            factors = c("condition", "timepoint", "patient_id")))
+
+```
+
+
+## Overview analysis of Cytof data
+
+```{r}
+n_cells(sce)
+```
+
+```{r}
+plotCounts(sce, color_by = "sample_id")
+```
+
+```{r}
+plotNRS(sce, features = type_markers(sce), color_by = "sample_id")
+```
+
+
+## Identify monocytes for removal 
+
+Cluster FLOWSom analysis - max 20 clusters
+
+For reproducibility set random seed
+
+```{r}
+set.seed(4321)
+sce <- cluster(sce, features = "type", 
+               xdim = 10, ydim = 10, maxK = 20, 
+               verbose = FALSE, seed = 4321) 
+```
+
+## Dimension reduction - TSNE
+```{r}
+set.seed(4321)
+sce <- runDR(sce, dr = "TSNE", cells = 500, features = "type")
+```
+
+```{r}
+plotDR(sce, "TSNE", color_by = "meta15")
+```
+
+
+```{r}
+plotDR(sce, "TSNE", color_by = "meta15") + facet_wrap("patient_id") +
+  guides(color = guide_legend(ncol = 2, override.aes = list(size = 3))) 
+```
+
+
+```{r fig.width=10}
+plotMultiHeatmap(sce, 
+    k = "meta15", scale = "never",
+    hm1 = FALSE, hm2 = c("CD14", "CD16", "CD56", "CD4"),
+    row_anno = FALSE, col_clust = FALSE,
+    hm2_pal = c("grey95", "black"))
+```
+
+### Monocytes identified by CD14+, CD16+ and CD4low expression - cluster 1
+
+### Create new sce (sce1) with monocyte clustes removed
+
+```{r}
+sce1 <- filterSCE(sce, cluster_id %in% c(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),  k = "meta15")
+```
+
+### FlowSOM cluster of sce1
+```{r}
+set.seed(4321)
+sce1 <- cluster(sce1, features = "type", 
+               xdim = 10, ydim = 10, maxK = 20, 
+               verbose = FALSE, seed = 4321) 
+```
+
+### TSNE Dimension reduction of sce1
+```{r}
+set.seed(4321)                                                                      
+sce1 <- runDR(sce1, dr = "TSNE", cells = 500, features = "type")
+```
+
+```{r}
+plotDR(sce1, "TSNE", color_by = "meta20") + facet_wrap("sample_id") +
+  guides(color = guide_legend(ncol = 2, override.aes = list(size = 3)))   
+```
+
+```{r}
+plotDR(sce1, "TSNE", color_by = "meta20")
+```
+
+
+
+```{r}
+plotExprHeatmap(sce1, features = "type",
+    by = "cluster_id", k = "meta20", m = "meta8",
+    scale = "last", q = 0.01, perc = TRUE, col_dend = FALSE)
+```
+
+```{r fig.width=15}
+plotPbExprs(sce1, k = "meta20", features = "type", 
+  group_by = "cluster_id", color_by = "sample_id", 
+  size_by = TRUE, geom = "points", jitter = FALSE, ncol = 5)
+```
+
+
+```{r fig.width=10}
+plotMultiHeatmap(sce1, 
+    k = "meta20", scale = "never",
+    hm1 = FALSE, hm2 = c("CD45RA", "CD16", "CD56"),
+    row_anno = FALSE, col_clust = FALSE,
+    hm2_pal = c("grey95", "black"))
+```
+
+Cluster 3, 11 : NK_cells
+
+
+```{r fig.width=20}
+plotMultiHeatmap(sce1, 
+    k = "meta20", scale = "never",
+    hm1 = FALSE, hm2 = c("CD3", "CD4", "CD8", "TCRgd", "GranB", "CD45RA", "CD27", "CD28", "CD127", "FOXP3", "CD25", "Valpha7.2"),
+    row_anno = FALSE, col_clust = FALSE,
+    hm2_pal = c("grey95", "black"))
+```
+
+CLuster 7 : TCRgd
+
+Cluster 15, 20 : CD4_CM
+Cluster 12 :CD4_naive
+Cluster 4 : CD8_naive
+Cluster 9, 8 : CD3_MAIT
+Cluster 6 : CD8_Cytotoxic
+
+```{r}
+plotDR(sce1, "TSNE", color_by = c("CD4", "FOXP3", "CD127", "CD25"))
+```
+
+
+
+```{r}
+plotDR(sce1, "TSNE", color_by = ("meta20"))
+```
+
+
+
+```{r fig.width=15}
+plotMultiHeatmap(sce1, 
+    k = "meta20", scale = "never",
+    hm1 = FALSE, hm2 = c("CD19", "CD20", "CD3", "CD4", "IgD", "CD27"),
+    row_anno = FALSE, col_clust = FALSE,
+    hm2_pal = c("grey95", "black"))
+```
+
+Cluster 1, 2, : B_naive
+Cluster 10, 5 : B_memory
+
+```{r}
+plotDR(sce1, "TSNE", color_by = c("HLADR", "CD14", "CD16", "S100a9"))
+```
+
+
+```{r fig.width=20}
+plotMultiHeatmap(sce1, 
+    k = "meta20", scale = "never",
+    hm1 = FALSE, hm2 = c("CD123", "SIGLEC6", "AXL", "GranB", "CD1c", "FCERI", "CD11c", "HLADR", "S100a9", "CD14", "CD16", "CLEC9A", "CD49d"),
+    row_anno = FALSE, col_clust = FALSE,
+    hm2_pal = c("grey95", "black"))
+```
+
+cluster 14  : DC6(pDC)_1
+cluster 17.18: Neutrophil
+cluster 13 :DC4
+cluster 16 : Eosinophils
+cluster 19: Basophils
+
+
+
+
+## Re-label meta20 clusters
+
+
+```{r}
+merging_table1 <- "merging_v3.xlsx"   
+merging_table1 <- read_excel(merging_table1)          
+head(data.frame(merging_table1)) 
+```
+
+```{r}
+merging_table1$new_cluster <- factor(merging_table1$new_cluster,         
+                                     levels = c("B_naive", "NK_cells", "CD8_naive", "CD8_cytotoxic", "CD3_TCRgd", "CD3_MAIT", "B_memory", "CD4_naive", "DC4", "DC6(pDC)", "CD4_CM", "Eosinophil", "Neutrophil", "Basophil" )) 
+```
+
+```{r}
+sce1 <- mergeClusters(sce1, k = "meta20",                                  
+                     table = merging_table1, id = "merging1") 
+```
+
+
+```{r}
+
+plotAbundances(sce1, k = "merging1", by = "sample_id", group_by = "condition")
+
+```
+
+```{r}
+newSCEILC008 <- filterSCE(sce1, patient_id == "ILC008")
+
+```
+
+
+```{r}
+
+plotAbundances(newSCEILC008, k = "merging1", by = "sample_id", group_by = "condition")
+
+```
+
+```{r}
+pA <- plotAbundances(newSCEILC008, k = "merging1", by = "sample_id")
+pA$data
+```
+
+## Export frequencies of merged cluster to dataframe
+
+```{r}
+ns <- table(
+  cluster_id = cluster_ids(newSCEILC008, k= "merging1"), 
+  sample_id = sample_ids(newSCEILC008))
+fq <- prop.table(ns, 2) * 100
+df <- as.data.frame(fq)
+```
+
+```{r}
+getwd()
+```
+
+```{r}
+write.xlsx (df,   "/Users/rebeccapayne/OneDrive - Newcastle University/ILC_study/Cytof_FCS_files/WBC/20190912_ILC008_WBC/RawFCSfiles/normed/ilc008_norm_singlets_live_CD45/Git_ILC008/mydata.xlsx", row.names = TRUE)
+
+```
+
+
+```{r}
+n_cells <- table(sample = sce1$sample_id, cluster = cluster_ids(sce1, "merging1"))
+
+write.xlsx(n_cells, "n_cells.xlsx")
+```
+
+
+
+```{r}
+sessionInfo()
+```
+
+
+
+
+
+
