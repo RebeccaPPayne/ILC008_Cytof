@@ -19,4 +19,5 @@ library(holepunch)
 write_compendium_description(package = "Cytof_ILC008_compendium", 
                              description = "Your compendium description")
 
-write_dockerfile(maintainer = "Rebecca_Payne")
+write_dockerfile(maintainer = "RebeccaPPayne")
+
