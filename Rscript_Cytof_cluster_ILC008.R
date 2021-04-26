@@ -1,15 +1,4 @@
-# Get the working directory to double check you are where you are supposed to be!
-getwd()
 
-
-# Install BiocManager
-install.packages("BiocManager")
-
-# Initiate renv to create a project specific library of your packages. 
-# If you dont have the package renv then install with;
-install.packages("renv")
- 
-renv::init()
 
 # You dont need to worry about this as I have already re-labeled the data to comply with the requirements here
 library(premessa)
