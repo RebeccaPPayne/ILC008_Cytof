@@ -24,6 +24,9 @@ library(flowCore)
 library(scater)
 library(SingleCellExperiment)
 library(openxlsx)
+library("ggplot2")
+library("scatterplot3d")
+
 
 # From here I would switch to the markdown file. I keep these script notes for my reference and for annotations of the script.
 
@@ -146,9 +149,8 @@ sce <- runDR(sce, dr = "UMAP", cells = 1e3, features = "type")
 
 # packages required for further analysis and plots
 
-library("ggplot2")
-library("scatterplot3d")
-library("ggplot2")
+
+
 
 # plots of the dimension reduction - you can change "TSNE" here for "UMAP" etc. 
 # Also you can change what you color by and facet_wrap by eg. different antigen to color the plot by.
@@ -282,13 +284,13 @@ pC$data
 
 sub <- filterSCE(sce, patient_id == "ILC009_BMT019")
 
-extractClusters(sub, k = "meta20" , clusters = NULL, as = c("fcs"), out_dir = "/Users/rebeccapayne/OneDrive - Newcastle University/ILC_study/Cytof_FCS_files/WBC/Matched_FCSfiles/Matched_fcs_LymphocyteGate/MATCHED_FCS",
+extractClusters(sub, k = "meta20" , clusters = NULL, as = c("fcs"), out_dir = "/Users/rebeccapayne/OneDrive - Newcastle University/ILC_study/Cytof_FCS_files/WBC/20190912_ILC008_WBC/RawFCSfiles/normed/ilc008_norm_singlets_live_CD45/Git_ILC008/ILC008_Git",
                 verbose = TRUE)
 
 
 
 
-extractClusters(sub1, k = "meta20" , clusters = NULL, as = c("fcs"), out_dir = "/Users/rebeccapayne/OneDrive - Newcastle University/ILC_study/Cytof_FCS_files/WBC/Matched_FCSfiles/Matched_fcs_LymphocyteGate/MATCHED_FCS",
+extractClusters(sub1, k = "meta20" , clusters = NULL, as = c("fcs"), out_dir = "/Users/rebeccapayne/OneDrive - Newcastle University/ILC_study/Cytof_FCS_files/WBC/20190912_ILC008_WBC/RawFCSfiles/normed/ilc008_norm_singlets_live_CD45/Git_ILC008/ILC008_Git",
                 verbose = TRUE)
 
 
@@ -296,7 +298,7 @@ extractClusters(sub1, k = "meta20" , clusters = NULL, as = c("fcs"), out_dir = "
 
 # to get list of all packages used in session
 sessionInfo()
-```
+
 
 
 

@@ -1,0 +1,32 @@
+Type: Compendium
+Package: Cytof_ILC008_compendium
+Title: Compendium for ILC008 data, markdown and script
+Version: 0.0.1
+Authors@R: 
+    person(given = "Rebecca",
+           family = "Payne",
+           role = c("aut", "cre"),
+           email = "rebecca.payne2@ncl.ac.uk")
+Description: Your compendium description
+License: What license it uses
+Depends: 
+    CATALYST,
+    cowplot,
+    devtools,
+    flowCore,
+    ggplot2,
+    knitr,
+    markdown,
+    openxlsx,
+    premessa,
+    readxl,
+    renv,
+    rmarkdown,
+    scater,
+    scatterplot3d,
+    SingleCellExperiment
+Remotes: 
+    ParkerICI/premessa,
+    rstudio/rmarkdown
+Encoding: UTF-8
+LazyData: true
