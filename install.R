@@ -9,6 +9,6 @@ install.packages(c("CATALYST",
                    "rmarkdown",
                    "scater",
                    "scatterplot3d",
-                   "SingleCellExperiment")
+                   "SingleCellExperiment"))
                    
           
