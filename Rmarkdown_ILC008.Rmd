@@ -17,6 +17,7 @@ library(flowCore)
 library(scater)
 library(SingleCellExperiment)
 library(openxlsx)
+library(markdown)
 ```
 
 
@@ -294,7 +295,7 @@ getwd()
 ```
 
 ```{r}
-write.xlsx (df,   "/Users/rebeccapayne/OneDrive - Newcastle University/ILC_study/Cytof_FCS_files/WBC/20190912_ILC008_WBC/RawFCSfiles/normed/ilc008_norm_singlets_live_CD45/Git_ILC008/mydata.xlsx", row.names = TRUE)
+write.xlsx (df,  "/Users/rebeccapayne/OneDrive - Newcastle University/ILC_study/Cytof_FCS_files/WBC/20190912_ILC008_WBC/RawFCSfiles/normed/ilc008_norm_singlets_live_CD45/Git_ILC008/ILC008_Git/mydata.xlsx", row.names = TRUE)
 
 ```
 
