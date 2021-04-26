@@ -1,12 +1,12 @@
 Type: Compendium
 Package: Cytof_ILC008_compendium
-Title: Compendium for ILC008 data, markdown and script
+Title: What the Package Does (One Line, Title Case)
 Version: 0.0.1
 Authors@R: 
-    person(given = "Rebecca",
-           family = "Payne",
+    person(given = "First",
+           family = "Last",
            role = c("aut", "cre"),
-           email = "rebecca.payne2@ncl.ac.uk")
+           email = "first.last@example.com")
 Description: Your compendium description
 License: What license it uses
 Depends: 
@@ -15,17 +15,20 @@ Depends:
     devtools,
     flowCore,
     ggplot2,
+    holepunch,
     knitr,
     markdown,
     openxlsx,
     premessa,
     readxl,
+    remotes,
     renv,
     rmarkdown,
     scater,
     scatterplot3d,
     SingleCellExperiment
 Remotes: 
+    karthik/holepunch,
     ParkerICI/premessa,
     rstudio/rmarkdown
 Encoding: UTF-8
