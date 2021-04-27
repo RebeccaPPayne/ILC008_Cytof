@@ -8,7 +8,10 @@ install.packages(c("BiocManager",
                    "rmarkdown",
                    "scatterplot3d"))
                    
-BiocManager::install(c("CATALYST",
-                       "flowCore",
-                       "scater",
-                       "SingleCellExperiment"))
+BiocManager::install("CATALYST")
+BiocManager::install("flowCore")
+BiocManager::install("scater")
+BiocManager::install("SingleCellExperiment")
+
+                      
+                      
