@@ -1,12 +1,13 @@
-install.packages(c("BiocManager",
-                   "cowplot",
-                   "ggplot2",
-                   "knitr",
-                   "markdown",
-                   "openxlsx",
-                   "readxl",
-                   "rmarkdown",
-                   "scatterplot3d"))
+install.packages("BiocManager")
+install.packages("cowplot")
+install.packages("ggplot2")
+install.packages("knitr")
+install.packages("markdown")
+install.packages("openxlsx")
+install.packages("readxl")
+install.packages("rmarkdown")
+install.packages("scatterplot3d")
+               
                    
 BiocManager::install("CATALYST")
 BiocManager::install("flowCore")
